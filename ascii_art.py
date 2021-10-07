@@ -9,7 +9,6 @@ import pickle
 import pandas as pd
 from keras.models import model_from_json
 from PIL import Image
-from tqdm import tqdm
 
 # Helper functions
 
@@ -195,7 +194,7 @@ def generate_ascii_art(img, new_width=0, save_img=False, save_txt=False):
           w += char_width
       widths.append(w)
   
-  img_aa = img_aa[0:(num_line-1)*18+16, 0:max(widths)]
+  img_aa = img_aa[0:num_line*18+16, 0:max(widths)]
 
   if save_img:
     img_aa = Image.fromarray(img_aa)
