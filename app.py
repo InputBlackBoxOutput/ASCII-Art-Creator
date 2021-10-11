@@ -8,15 +8,26 @@ import ascii_art
 st.set_page_config(page_title='ASCII Art Creator', page_icon='🖼️', layout='centered')
 st.image("images/banner.png", use_column_width=True)
 
+st.image("images/sample-output-1.png", use_column_width=True)
+
 st.markdown(
 	'''
-		#### Generate ASCII art using computer vision
-		<br>
+		#### How to use the website?
+		1. Upload an image
+		1. Set input image width
+		1. Set the threshold such that optimal edges and thinned edges are observed
+		1. Click on the 'Generate ASCII art' button and wait for a while
+
+		#### How it works?
+		1. Edges are detected from the image using dilation followed by subtraction with the original image
+		1. Thinning operation is performed on the edges using Guo-Hall thinning algorithm
+		1. Sub-images are obtained by using the sliding window technique and then passed to a CNN which determines the best character that represents the thinned edges present in the sub-image
+
 	'''
 	, unsafe_allow_html=True)
 
-st.image("images/sample-output-1.png", use_column_width=True)
-st.image("images/sample-output-2.png", use_column_width=True)
+st.image("images/process.drawio.png", use_column_width=True)
+
 
 with open("style.css") as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -33,8 +44,8 @@ if image_file is not None:
 	st.success("Image uploaded successfully!")
 
 	st.markdown("-----")
-	new_width = st.number_input("Output image width", min_value= 400, max_value=1000, value=550, step=5)
-	threshold_value = st.slider("Threshold for binary thresholding", min_value=0, max_value=255, value=150, step=1)
+	new_width = st.number_input("Input image width", min_value= 400, max_value=800, value=550, step=5)
+	threshold_value = st.slider("Threshold", min_value=0, max_value=255, value=150, step=1)
 
 	_, c1, c2, _ = st.columns([2, 4, 4, 2])
 	edges = ascii_art.detect_edges(uploaded_image, threshold=threshold_value)
@@ -49,6 +60,6 @@ if image_file is not None:
 		st.image(artwork, use_column_width='always', caption="ASCII art")		
 		st.download_button(label="Download image", data=cv2.imencode('.jpg', artwork)[1].tobytes(), file_name="ascii-art.png", mime="image/png")
 
-	st.markdown('<p style="text-align:center"> Press <kbd>Crtl</kbd> + <kbd>R</kbd> to reset the application </p>', unsafe_allow_html=True)
+	st.markdown('<p style="text-align:center"> Press <kbd>Crtl</kbd> + <kbd>R</kbd> to reset </p>', unsafe_allow_html=True)
 
 st.markdown('<hr> <h5>Made with lots of ⏱️, 📚 and ☕ by <a href="https://github.com/InputBlackBoxOutput">InputBlackBoxOutput</a><h5> <hr>', unsafe_allow_html=True)
