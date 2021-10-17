@@ -1,6 +1,6 @@
 # ASCII Art Creator
 
-Website: https://ascii-art-creator.herokuapp.com/
+Website: https://share.streamlit.io/inputblackboxoutput/ascii-art-creator/main/app.py
 
 |||
 |--|--|
