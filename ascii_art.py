@@ -205,7 +205,7 @@ def generate_ascii_art(img, new_width=0, save_img=False, save_txt=False):
       for each in predicts:
         f.write("".join(each) + '\r\n')
 
-  return img_aa
+  return (img_aa, predicts)
 
 
 if __name__ == "__main__":
@@ -217,7 +217,7 @@ if __name__ == "__main__":
   edges = detect_edges(img, threshold=100)
   thinned_edges = 255 - 255 * thin_edges(edges)
  
-  artwork = generate_ascii_art(thinned_edges, new_width=550)
+  artwork, text = generate_ascii_art(thinned_edges, new_width=550)
   
   show_image(img, "original image")
   show_image(edges, "edges")

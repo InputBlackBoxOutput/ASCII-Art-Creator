@@ -56,8 +56,17 @@ if image_file is not None:
 
 	if st.button('Generate ASCII art'):
 		with st.spinner('Processing the image. This may take a while'):
-			artwork = ascii_art.generate_ascii_art(thinned_edges, new_width=new_width)
-		st.image(artwork, use_column_width='always', caption="ASCII art")		
+			artwork, artwork_text = ascii_art.generate_ascii_art(thinned_edges, new_width=new_width)
+
+		st.image(artwork, use_column_width='always', caption="ASCII art")
+		
+		# formatted = ""
+		# for each in artwork_text:
+			# line = "".join(each) + '\r\n'
+			# formatted += line
+
+		# st.markdown(f'''<pre style="font-family: 'MS PGothic', 'Saitamaar', 'IPAMonaPGothic' !important;">{formatted}</pre>''', unsafe_allow_html=True)
+		
 		st.download_button(label="Download image", data=cv2.imencode('.jpg', artwork)[1].tobytes(), file_name="ascii-art.png", mime="image/png")
 
 	st.markdown('<p style="text-align:center"> Press <kbd>Crtl</kbd> + <kbd>R</kbd> to reset </p>', unsafe_allow_html=True)
