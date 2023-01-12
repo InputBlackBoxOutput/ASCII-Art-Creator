@@ -1,6 +1,6 @@
 # ASCII Art Creator
 
-Link: https://share.streamlit.io/inputblackboxoutput/ascii-art-creator/main/app.py
+Link: https://ascii-art-creator.streamlit.app/
 
 |||
 |--|--|
