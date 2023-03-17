@@ -145,18 +145,13 @@ def get_predictions(img, model, char_dict, char_list):
 
   for h in range(num_line):
       w = 0
-      penalty = 1
       predict_line = []
       while w <= img.shape[1] - input_shape[1]:
           input_img = img[h*18 : h*18+input_shape[0], w : w+input_shape[1]]
           input_img = input_img.reshape([1, input_shape[0], input_shape[1], 1])
-          predict = model.predict(input_img)
-
-          if penalty: 
-            predict[0, 1] = 0
+          predict = model(input_img)
 
           predict = np.argmax(predict[0])
-          penalty = (predict == 1)
           char = char_list[predict]
 
           predict_line.append(char)

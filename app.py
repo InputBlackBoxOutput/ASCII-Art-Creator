@@ -28,10 +28,6 @@ st.markdown(
 
 st.image("images/process.drawio.png", use_column_width=True)
 
-
-with open("style.css") as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
 st.markdown("-----")
 image_file = st.file_uploader("Upload an image file", type=['png', 'jpg'])
 
@@ -44,7 +40,7 @@ if image_file is not None:
 	st.success("Image uploaded successfully!")
 
 	st.markdown("-----")
-	new_width = st.number_input("Input image width", min_value= 400, max_value=800, value=550, step=5)
+	new_width = st.number_input("Input image width", min_value= 400, max_value=1000, value=640, step=5)
 	threshold_value = st.slider("Threshold", min_value=0, max_value=255, value=150, step=1)
 
 	_, c1, c2, _ = st.columns([2, 4, 4, 2])
@@ -54,7 +50,7 @@ if image_file is not None:
 	c1.image(255 * edges, use_column_width=True, caption="Edges")
 	c2.image(thinned_edges, caption="Thinned edges")
 
-	if st.button('Generate ASCII art'):
+	if st.button('Generate ASCII art', type="primary", use_container_width=True):
 		with st.spinner('Processing the image. This may take a while'):
 			artwork, artwork_text = ascii_art.generate_ascii_art(thinned_edges, new_width=new_width)
 
@@ -67,7 +63,13 @@ if image_file is not None:
 
 		# st.markdown(f'''<pre style="font-family: 'MS PGothic', 'Saitamaar', 'IPAMonaPGothic' !important;">{formatted}</pre>''', unsafe_allow_html=True)
 		
-		st.download_button(label="Download image", data=cv2.imencode('.jpg', artwork)[1].tobytes(), file_name="ascii-art.png", mime="image/png")
+		st.download_button(
+			label="Download image", 
+			data=cv2.imencode('.jpg', artwork)[1].tobytes(), 
+			file_name="ascii-art.png", 
+			mime="image/png",
+			use_container_width=True
+		)
 
 	st.markdown('<p style="text-align:center"> Press <kbd>Crtl</kbd> + <kbd>R</kbd> to reset </p>', unsafe_allow_html=True)
 
