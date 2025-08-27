@@ -2,9 +2,8 @@
 
 Link: https://ascii-art-creator.streamlit.app/
 
-|||
-|--|--|
-|![](images/sample-output-1.png)| ![](images/sample-output-2.png)|
+![](images/sample-output-1.png)
+![](images/sample-output-2.png)
 
 ## How to use the website?
 1. Upload an image
