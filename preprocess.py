@@ -1,27 +1,38 @@
 import numpy as np
 import cv2
 
+# Remove salt and pepper noise
+def deblur(img, intensity):
+    if intensity == 0:
+        return img
+
+    if intensity == 1:
+        img = cv2.medianBlur(img, 3)
+    elif intensity == 2:
+        img = cv2.medianBlur(img, 5)
+        img = cv2.medianBlur(img, 7)
+    elif intensity == 3:
+        img = cv2.medianBlur(img, 3)
+        img = cv2.medianBlur(img, 5)
+        img = cv2.medianBlur(img, 7)
+    else:
+        raise Exception("Invalid deblur intensity")
+
+    return img
+
+# Detect edges in an image using original image - dilated image technique
 def detect_edges(img, threshold):
-    neiborhood24 = np.array(
-        [
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-        ],
-        np.uint8,
-    )
+    kernel = np.ones((5, 6), np.uint8)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    dilated = cv2.dilate(gray, neiborhood24, iterations=1)
+    dilated = cv2.dilate(gray, kernel, iterations=1)
     diff = cv2.absdiff(dilated, gray)
     (T, edges) = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
     edges = edges // 255
 
     return edges
 
-# Guo-Hall thinning
+# Perform thinning using the Guo-Hall thinning algorithm
 def thin_edges(src):
     def iteration(src, iter):
         marker = np.ones(src.shape, np.uint8)
