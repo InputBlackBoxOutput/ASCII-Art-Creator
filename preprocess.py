@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from tensorflow._api.v2.image import image_gradients
 
 # Remove salt and pepper noise
 def deblur(img, intensity):
@@ -20,17 +21,24 @@ def deblur(img, intensity):
 
     return img
 
-# Detect edges in an image using original image - dilated image technique
-def detect_edges(img, threshold):
+# Perform edge detection on binary image using morphological gradient
+def detect_edges(img, threshold=150):
     kernel = np.ones((5, 6), np.uint8)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     dilated = cv2.dilate(gray, kernel, iterations=1)
     diff = cv2.absdiff(dilated, gray)
     (T, edges) = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)
-    edges = edges // 255
+
+    # Perform thinning using Guo-Hall algorithm
+    edges = 255 * thin_edges(np.array(edges // 255))
+    edges = cv2.bitwise_not(edges)
 
     return edges
+
+# Detect edges in an image using HED
+def detect_edges_dnn(img):
+    return img
 
 # Perform thinning using the Guo-Hall thinning algorithm
 def thin_edges(src):
@@ -81,4 +89,10 @@ def thin_edges(src):
         if d == 0:
             break
 
+        # Safegaurd against infinite loop
+        if i == 25:
+            break
+
     return dst
+
+

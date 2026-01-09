@@ -29,11 +29,14 @@ st.markdown(
 
 st.image("images/process.drawio.svg", width='stretch')
 
+st.text("Made with lots of ⏱️, 📚 and ☕ by InputBlackBoxOutput")
+
 st.markdown("-----")
+
 
 options = {
     0: "Cartoon image with black outline [Recommended]",
-    1: "Cartoon image with with less vibrant colour segments" 
+    1: "Cartoon image with with less vibrant colour segments [Not implemented yet!]"
 }
 img_type = st.selectbox("Select image type:", options.values())
 
@@ -45,57 +48,37 @@ if img_file is not None:
     c.image(img, width='stretch', caption="Original Image")
     st.success("Image uploaded successfully!")
 
-#     st.markdown("-----")
-#     width = st.number_input("Approximate output image width", min_value= 400, max_value=1000, value=640, step=10)
-#     deblur = st.number_input("Deblur intensity", min_value=0, max_value=3, value=0, step=1)
+    st.markdown("-----")
+    width = st.number_input("Approximate output image width", min_value= 400, max_value=1000, value=640, step=10)
+    deblur = st.number_input("Deblur intensity", min_value=0, max_value=3, value=0, step=1)
 
-#     if img_type == options[0]:
-#         threshold = st.slider("Black outline detection threshold", min_value=0, max_value=50, value=25, step=5)
+    if img_type == options[0]:
+        threshold = st.slider("Edge detection threshold", min_value=0, max_value=255, value=150, step=10)
+        img = preprocess.deblur(img, intensity=deblur)
+        img = preprocess.detect_edges(img, threshold=threshold)
+        st.image(img, width="stretch", caption="Outline")
 
-#         _, c1, c2, _ = st.columns([2, 4, 4, 2])
+    else:
+        img = preprocess.deblur(img, intensity=deblur)
+        img = preprocess.detect_edges_dnn(img)
+        st.image(img, caption="Detected edges", width='stretch')
 
-#         img = preprocess.deblur(uploaded_image, intensity=deblur)
-#         img = preprocess.detect_black_outline(img, threshold=threshold)
-#         c1.image(img, width="stretch", caption="Outline")
+    if st.button('Generate ASCII art', type="primary", width='stretch'):
+        with st.spinner('Processing the image. This may take a while'):
+            img = imutils.resize(img, width=width)
+            img = imutils.margin(img)
 
-#         img = 255 - 255 * preprocess.thin_edges(np.array(img))
-#         c2.image(img, caption="Thinned edges")
+            CNN = model.Model()
+            artwork, text = CNN.generate(img)
 
-#     else:
-#         threshold = st.slider("Edge detection threshold", min_value=0, max_value=255, value=150, step=10)
+        st.image(artwork, width="stretch", caption="ASCII art")
 
-#         _, c1, c2, _ = st.columns([2, 4, 4, 2])
+        st.download_button(
+			label="Download image",
+			data=cv2.imencode('.jpg', artwork)[1].tobytes(),
+			file_name="ascii-art.png",
+			mime="image/png",
+			width='stretch'
+		)
 
-#         img = preprocess.deblur(uploaded_image, intensity=deblur)
-#         img = preprocess.detect_edges(img, threshold=threshold)
-#         c1.image(img, width="stretch", caption="Outline")
 
-#         img = 255 - 255 * preprocess.thin_edges(img)
-#         c2.image(img, caption="Thinned edges")
-
-#     if st.button('Generate ASCII art', type="primary", width='stretch'):
-#         with st.spinner('Processing the image. This may take a while'):
-#             img = imutils.resize(img, width=width)
-#             img = imutils.margin(img)
-
-#             CNN = model.Model()
-#             artwork, text = CNN.generate(img)
-
-#         st.image(artwork, width="stretch", caption="ASCII art")
-
-#         st.download_button(
-# 			label="Download image",
-# 			data=cv2.imencode('.jpg', artwork)[1].tobytes(),
-# 			file_name="ascii-art.png",
-# 			mime="image/png",
-# 			width='stretch'
-# 		)
-
-# st.markdown(
-#     "\n".join(
-#         [
-#             "---",
-#             "##### Made with lots of ⏱️, 📚 and ☕ by [InputBlackBoxOutput](https://github.com/InputBlackBoxOutput)",
-#         ]
-#     )
-# )
