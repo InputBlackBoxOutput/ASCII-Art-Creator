@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 
 class Model:
-    def __init__(self, weights_path="model/character-estimation/weight.hdf5"):
+    def __init__(self, weights_path="model/weight.hdf5"):
         self.weights_path = weights_path
 
         self.model = self.build_model()
@@ -108,13 +108,13 @@ class Model:
             print(f"Error loading model: {e}")
             return None
 
-    def load_list(self, path="model/character-estimation/output.json"):
+    def load_list(self, path="model/output.json"):
         with open(path, 'r', encoding='utf-8') as infile:
             data = json.load(infile)
 
         return data["character-list"]
 
-    def load_bitmap(self, path="model/character-estimation/output.json"):
+    def load_bitmap(self, path="model/output.json"):
         with open(path, 'r', encoding='utf-8') as infile:
             data = json.load(infile)
 

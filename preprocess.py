@@ -36,10 +36,6 @@ def detect_edges(img, threshold=150):
 
     return edges
 
-# Detect edges in an image using HED
-def detect_edges_dnn(img):
-    return img
-
 # Perform thinning using the Guo-Hall thinning algorithm
 def thin_edges(src):
     def iteration(src, iter):

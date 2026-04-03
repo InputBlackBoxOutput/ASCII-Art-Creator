@@ -33,13 +33,6 @@ st.text("Made with lots of ⏱️, 📚 and ☕ by InputBlackBoxOutput")
 
 st.markdown("-----")
 
-
-options = {
-    0: "Cartoon image with black outline [Recommended]",
-    1: "Cartoon image with with less vibrant colour segments [Not implemented yet!]"
-}
-img_type = st.selectbox("Select image type:", options.values())
-
 img_file = st.file_uploader("Upload a cartoon image file", type=['png', 'jpg'])
 if img_file is not None:
     img = np.array(Image.open(img_file))
@@ -51,20 +44,15 @@ if img_file is not None:
     st.markdown("-----")
     width = st.number_input("Approximate output image width", min_value= 400, max_value=1000, value=640, step=10)
     deblur = st.number_input("Deblur intensity", min_value=0, max_value=3, value=0, step=1)
+    threshold = st.slider("Edge detection threshold", min_value=0, max_value=255, value=150, step=10)
+ 
+    img = preprocess.deblur(img, intensity=deblur)
+    img = preprocess.detect_edges(img, threshold=threshold)
 
-    if img_type == options[0]:
-        threshold = st.slider("Edge detection threshold", min_value=0, max_value=255, value=150, step=10)
-        img = preprocess.deblur(img, intensity=deblur)
-        img = preprocess.detect_edges(img, threshold=threshold)
-        st.image(img, width="stretch", caption="Outline")
-
-    else:
-        img = preprocess.deblur(img, intensity=deblur)
-        img = preprocess.detect_edges_dnn(img)
-        st.image(img, caption="Detected edges", width='stretch')
+    st.image(img, width="stretch", caption="Outline")
 
     if st.button('Generate ASCII art', type="primary", width='stretch'):
-        with st.spinner('Processing the image. This may take a while'):
+        with st.spinner('The image is now being processed. This may take a while to complete.'):
             img = imutils.resize(img, width=width)
             img = imutils.margin(img)
 

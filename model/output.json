@@ -1,5 +1,6 @@
 {
   "metadata": {
+    "source": "DeepAA",
     "total_characters": 411,
     "description": "Combined character list and bitmap representations for ASCII art generation"
   },

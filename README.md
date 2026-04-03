@@ -18,4 +18,12 @@ Link: https://ascii-art-creator.streamlit.app/
 
 ![](images/process.drawio.svg)
 
+## Setup virtual environment and run locally
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run application.py
+```
+
 ### Made with lots of ⏱️, 📚 and ☕ by InputBlackBoxOutput
